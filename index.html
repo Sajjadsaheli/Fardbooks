@@ -29,22 +29,25 @@ details summary{font-weight:700;cursor:pointer}
 img.news{width:100%;border-radius:10px;margin-bottom:8px}
 .config{background:#fff3;border:1px solid #fa0;border-radius:10px;padding:12px;margin-bottom:12px}
 .config input{width:100%;padding:8px;margin:4px 0;border:1px solid #888;border-radius:6px}
+.config button{margin-top:8px}
 </style>
 </head>
 <body>
 <header><h1 id="name">انتشارات فرهنگی فرد</h1><small id="sub">در حال بارگذاری...</small></header>
 <div id="config" class="config" style="display:none">
   <p class="t">⚙️ تنظیمات API</p>
-  <p class="h">آدرس سرور ربات (مثلاً: https://your-bot.runflare.cloud)</p>
-  <input type="text" id="apiUrl" placeholder="https://your-bot.runflare.cloud">
+  <p class="h">آدرس سرور ربات</p>
+  <input type="text" id="apiUrl" placeholder="http://46.4.144.76:8080">
   <button class="btn" onclick="saveConfig()">ذخیره</button>
 </div>
 <nav id="nav"></nav>
 <main id="view"></main>
 <div id="toast"></div>
 <script>
-// تنظیمات API
-let API_URL = localStorage.getItem('wiki_api_url') || '';
+// آدرس سرور ربات را اینجا تنظیم کنید
+const DEFAULT_API_URL = 'http://46.4.144.76:8080';
+
+let API_URL = localStorage.getItem('wiki_api_url') || DEFAULT_API_URL;
 const hp = new URLSearchParams(location.hash.slice(1));
 const INIT = hp.get('tgWebAppData') || '';
 
@@ -252,11 +255,6 @@ window.go = async t => {
 };
 (async () => {
   if (!INIT) { view.innerHTML = '<p class="h">این صفحه را از داخل تلگرام باز کنید.</p>'; return; }
-  if (!API_URL) {
-    $('#config').style.display = 'block';
-    $('#apiUrl').value = API_URL;
-    return;
-  }
   try {
     const h = await api('/api/home'); BOT = h.bot; $('#name').textContent = h.name; $('#sub').textContent = h.publisher + ' · ⭐ ' + h.points;
     const on = TABS.filter(([k]) => h.modules.includes(k));
